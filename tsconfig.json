@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2018",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
@@ -14,7 +14,11 @@
     "types": [
       "webpack-env",
       "mocha",
-      "chai"
+      "chai",
+      "@fortawesome/free-solid-svg-icons",
+      "@fortawesome/fontawesome-svg-core",
+      "@fortawesome/free-brands-svg-icons",
+      "@fortawesome/vue-fontawesome",
     ],
     "paths": {
       "@/*": [
@@ -29,6 +33,7 @@
     ]
   },
   "include": [
+    // "types/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
