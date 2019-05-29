@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.4",
+    "@vue/cli": "^3.8.2",
     "@vue/cli-plugin-e2e-nightwatch": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-plugin-typescript": "^3.7.0",
