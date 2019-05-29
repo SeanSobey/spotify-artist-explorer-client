@@ -1,7 +1,9 @@
 <template>
 	<b-container fluid>
-		<b-row class="justify-content-center">
-			<b-button variant="primary" v-on:click="loginOnClick()">Login to Spotify</b-button>
+		<b-row class="justify-content-center mt-5">
+			<b-button variant="primary" v-on:click="loginOnClick()">
+				<img src="../assets/Spotify_logo_without_text_white.svg" width="16" height="16" class="mr-1 mb-1" />Login to Spotify
+			</b-button>
 		</b-row>
 	</b-container>
 </template>
@@ -9,6 +11,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Authentication } from '@/store';
+import { RouteNames } from '@/router';
 import { spotify, authServer } from '@/constants';
 
 @Component({})
@@ -47,7 +50,9 @@ export default class Login extends Vue {
 		this.authWindow.close();
 		this.authWindow = null;
 		const code = event.data;
-		fetch(`${authServer}?code=${code}`, { method: 'POST' })
+		const url = new URL(authServer);
+		url.searchParams.append('code', code);
+		fetch(url.href, { method: 'POST' })
 			.then((response) => response.json())
 			.then((data) => {
 				const authentication: Authentication = {
@@ -60,7 +65,7 @@ export default class Login extends Vue {
 				this.spotify.setAccessToken(authentication.accessToken);
 				this.spotify.setRefreshToken(authentication.refreshToken);
 				this.$store.commit('authenticate', authentication);
-				this.$router.push('home');
+				this.$router.push(RouteNames.home);
 			})
 			.catch((error) => {
 				console.error('fetch failed', error);

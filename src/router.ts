@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router, { RouteConfig } from 'vue-router';
-import store from './store';
+import Store from './store';
 import Login from './views/Login.vue';
 import Logout from './views/Logout.vue';
 import Home from './views/Home.vue';
@@ -39,21 +39,22 @@ export const routes: Array<RouteConfig> = [
 	// },
 ];
 
-const router = new Router({
-	routes,
-});
-
-router.beforeEach((to, from, next) => {
-	if (to.name === RouteNames.login) {
-		if (store.state.authentication) {
-			return next({ name: RouteNames.home });
-		}
-	} else {
-		if (!store.state.authentication) {
-			return next({ name: RouteNames.login });
-		}
+export default class extends Router {
+	constructor(store: Store) {
+		super({
+			routes,
+		});
+		this.beforeEach((to, from, next) => {
+			if (to.name === RouteNames.login) {
+				if (store.state.authentication) {
+					return next({ name: RouteNames.home });
+				}
+			} else {
+				if (!store.state.authentication) {
+					return next({ name: RouteNames.login });
+				}
+			}
+			return next();
+		});
 	}
-	return next();
-});
-
-export default router;
+}

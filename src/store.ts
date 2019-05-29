@@ -15,18 +15,22 @@ interface State {
 	authentication: Authentication | null;
 }
 
-const store = new Vuex.Store<State>({
-	state: {
-		authentication: null,
-	},
-	mutations: {
-		authenticate(state: State, authentication: Authentication): void {
-			state.authentication = authentication;
-		},
-	},
-	actions: {
-
-	},
-});
-
-export default store;
+export default class extends Vuex.Store<State> {
+	constructor() {
+		super({
+			state: {
+				authentication: null,
+			},
+			mutations: {
+				authenticate(state: State, authentication: Authentication): void {
+					state.authentication = authentication;
+				},
+				unauthenticate(state: State): void {
+					state.authentication = null;
+				},
+			},
+			actions: {
+			},
+		});
+	}
+};

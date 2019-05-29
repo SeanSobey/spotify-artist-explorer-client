@@ -47,7 +47,7 @@ interface Album {
 	readonly releaseDate: Date;
 }
 
-const batchSize = 10;
+const batchSize = 8;
 
 @Component({})
 export default class Home extends Vue {
@@ -72,17 +72,6 @@ export default class Home extends Vue {
 					this.albums.push(albums);
 					this.albums.sort((a, b) => a.artist.localeCompare(b.artist));
 				}
-				// for (const artist of artists) {
-				// 	const albumData = await this.spotify.getArtistAlbums(artist.id, { limit: 1, include_groups: 'album' });
-				// 	this.progress++;
-				// 	if (albumData.body.items.length === 0) {
-				// 		continue;
-				// 	}
-				// 	const albums = albumData.body.items.map((album) => this.createAlbum(album));
-				// 	albums.sort((a, b) => a.releaseDate - b.releaseDate);
-				// 	this.albums.push(albums[0]);
-				// 	this.albums.sort((a, b) => a.artist.localeCompare(b.artist));
-				// }
 			}
 		})()
 			.catch((error) => {
@@ -121,7 +110,7 @@ export default class Home extends Vue {
 					continue;
 				}
 				const albums = albumData.body.items.map((album) => this.createAlbum(album));
-				albums.sort((a, b) => a.releaseDate - b.releaseDate);
+				albums.sort((a, b) => a.releaseDate.valueOf() - b.releaseDate.valueOf());
 				const album = albums[0];
 				yield [artist, album];
 			}

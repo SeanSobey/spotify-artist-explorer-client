@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router';
-import store from './store';
+import Router from './router';
+import Store from './store';
 import BootstrapVue from 'bootstrap-vue';
 
 // import 'bootstrap/dist/css/bootstrap.css';
@@ -30,6 +30,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('font-awesome-layers', FontAwesomeLayers);
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText);
 
+const store = new Store();
+const router = new Router(store);
 const app = new Vue({
 	router,
 	store,

@@ -1,7 +1,7 @@
 <template>
 	<b-navbar type="dark" variant="primary" class="mb-2">
 		<b-navbar-brand>
-			<!-- <img src="./assets/icon.png" width="32" height="32" class="d-inline-block align-top"> -->
+			<img src="../assets/Spotify_logo_without_text_white.svg" width="32" height="32" class="d-inline-block align-top">
 			Spotify Artist Explorer
 		</b-navbar-brand>
 		<b-navbar-nav class="ml-auto">
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import router, { routes, RouteNames } from '../router';
+import { routes, RouteNames } from '@/router';
 import { RouteConfig } from 'vue-router';
 
 @Component({})
@@ -43,7 +43,7 @@ export default class Navigation extends Vue {
 	}
 
 	public isActive(route: RouteConfig): boolean {
-		return router.currentRoute.name === route.name;
+		return this.$router.currentRoute.name === route.name;
 	}
 }
 </script>
