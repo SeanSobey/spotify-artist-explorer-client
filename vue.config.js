@@ -11,4 +11,17 @@ module.exports = {
 			webpackConfig.devtool = 'source-map';
 		}
 	},
+	// pluginOptions: {
+	// 	'style-resources-loader': {
+	// 		preProcessor: 'scss',
+	// 		patterns: [path.resolve(__dirname, './src/styles/global.scss')],
+	// 	},
+	// },
+	// css: {
+	// 	loaderOptions: {
+	// 		sass: {
+	// 			data: `@import "@/styles/import.scss";`,
+	// 		},
+	// 	},
+	// }
 };

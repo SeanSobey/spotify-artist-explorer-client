@@ -1,29 +1,59 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import Router, { RouteConfig } from 'vue-router';
+import store from './store';
 import Login from './views/Login.vue';
-import Auth from './views/Auth.vue';
+import Logout from './views/Logout.vue';
+import Home from './views/Home.vue';
 
 Vue.use(Router);
 
-export default new Router({
-	routes: [
-		{
-			path: '/',
-			name: 'login',
-			component: Login,
-		},
-		// {
-		// 	path: '/about',
-		// 	name: 'about',
-		// 	// route level code-splitting
-		// 	// this generates a separate chunk (about.[hash].js) for this route
-		// 	// which is lazy-loaded when the route is visited.
-		// 	component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-		// },
-		{
-			path: '/auth',
-			name: 'auth',
-			component: Auth,
-		},
-	],
+export enum RouteNames {
+	login = 'Login',
+	logout = 'Logout',
+	home = 'Home',
+}
+
+export const routes: Array<RouteConfig> = [
+	{
+		path: '/home',
+		name: RouteNames.home,
+		component: Home,
+	},
+	{
+		path: '/login',
+		name: RouteNames.login,
+		component: Login,
+	},
+	{
+		path: '/logout',
+		name: RouteNames.logout,
+		component: Logout,
+	},
+	// {
+	// 	path: '/about',
+	// 	name: 'about',
+	// 	// route level code-splitting
+	// 	// this generates a separate chunk (about.[hash].js) for this route
+	// 	// which is lazy-loaded when the route is visited.
+	// 	component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+	// },
+];
+
+const router = new Router({
+	routes,
 });
+
+router.beforeEach((to, from, next) => {
+	if (to.name === RouteNames.login) {
+		if (store.state.authentication) {
+			return next({ name: RouteNames.home });
+		}
+	} else {
+		if (!store.state.authentication) {
+			return next({ name: RouteNames.login });
+		}
+	}
+	return next();
+});
+
+export default router;

@@ -3,16 +3,24 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-interface State {
-	authentication: null | string;
+export interface Authentication {
+	readonly accessToken: string;
+	readonly expiresIn: number;
+	readonly refreshToken: string;
+	readonly tokenType: string;
+	readonly scope: string;
 }
 
-export default new Vuex.Store<State>({
+interface State {
+	authentication: Authentication | null;
+}
+
+const store = new Vuex.Store<State>({
 	state: {
 		authentication: null,
 	},
 	mutations: {
-		authenticate(state: State, authentication: string): void {
+		authenticate(state: State, authentication: Authentication): void {
 			state.authentication = authentication;
 		},
 	},
@@ -20,3 +28,5 @@ export default new Vuex.Store<State>({
 
 	},
 });
+
+export default store;

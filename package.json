@@ -1,5 +1,5 @@
 {
-  "name": "spotify-artist-explorer",
+  "name": "spotify-artist-explorer-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit",
     "schemastore-definitions": "npm run-script schemastore-definitions-eslintrc",
-    "schemastore-definitions-eslintrc": "curl -s http://json.schemastore.org/eslintrc | json2ts > types/eslintrc.d.ts"
+    "schemastore-definitions-eslintrc": "curl -s http://json.schemastore.org/eslintrc | json2ts > types/eslintrc/index.d.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
@@ -18,10 +18,12 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "bootstrap-vue": "^2.0.0-rc.20",
+    "spotify-web-api-node": "^4.0.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
+    "vue-spotify": "^1.0.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
