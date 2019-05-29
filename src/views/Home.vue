@@ -1,5 +1,20 @@
 <template>
 	<b-container fluid>
+		<b-nav align="right">
+			<b-nav-form>
+				<b-form-input v-model="artistFilter" size="sm" class="mr-sm-2" placeholder="Artist"></b-form-input>
+				<b-form-input v-model="yearFilter" size="sm" class="mr-sm-2" placeholder="Year"></b-form-input>
+				<!-- <b-button size="sm" class="my-2 my-sm-0" v-on:click="filterTable()">Search</b-button> -->
+			</b-nav-form>
+			<b-nav-item
+				v-for="display in displays"
+				:key="display.displayType"
+				:active="display.isActive"
+				v-on:click="setDisplay(display.displayType)"
+			>
+				<font-awesome-icon :icon="display.icon" size="lg"/>
+			</b-nav-item>
+		</b-nav>
 		<b-row v-if="isLoading" class="justify-content-center">
 			<span class="h1">
 				<font-awesome-icon icon="spinner" class="spin mr-2"/>Loading Artists
@@ -14,36 +29,44 @@
 						</span>
 					</b-progress-bar>
 				</b-progress>
-				<!-- <b-progress :value="progress" :max="progressMax" height="1.6em" class="mb-3">
-					<span class="mx-auto">
-						{{ progress }} / {{ progressMax }}
-					</span>
-				</b-progress> -->
 			</b-col>
 		</b-row>
-		<b-row>
+		<b-row v-if="isViewActive('grid')">
 			<b-col
 				v-for="(album, index) in albums"
 				:key="index"
 				align-content="center"
 				class="col-sm-5 col-md-4 col-lg-3 col-xl-2"
 			>
-				<b-card :img-src="album.image" :img-alt="album.name" img-top class="my-2">
-					<b-card-text>{{ album.artist }} - {{ album.releaseDate.getFullYear() }} - {{ album.name }}</b-card-text>
+				<b-card :img-src="album.images[1]" :img-alt="album.name" img-top class="my-2">
+					<b-card-text>{{ album.artist }} - {{ formatReleaseDate(album.releaseDate) }} - {{ album.name }}</b-card-text>
 				</b-card>
 			</b-col>
+		</b-row>
+		<b-row v-if="isViewActive('list')">
+			<b-table striped hover :items="getTableItems()" :fields="getTableFields()">
+				<template slot="images" slot-scope="data">
+					<b-img thumbnail fluid :src="data.item.images[2]" :alt="data.item.name"></b-img>
+				</template>
+			</b-table>
 		</b-row>
 	</b-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { BvTableField } from 'bootstrap-vue';
 import { Artist as SpotifyArtist, Album as SpotifyAlbum } from '../../types/spotify-web-api-node';
+
+enum DisplayType {
+	Grid = 'grid',
+	List = 'list',
+}
 
 interface Album {
 	readonly name: string;
 	readonly artist: string;
-	readonly image: string;
+	readonly images: [string, string, string];
 	readonly releaseDate: Date;
 }
 
@@ -56,7 +79,21 @@ export default class Home extends Vue {
 	public progress: number = 0;
 	public progressMax: number = 0;
 	public afterId: string | null = null;
+	public artistFilter: string = '';
+	public yearFilter: string = '';
 	public albums: Array<Album> = [];
+	public displays = [
+		{
+			icon: 'th',
+			displayType: DisplayType.Grid,
+			isActive: false,
+		},
+		{
+			icon: 'list',
+			displayType: DisplayType.List,
+			isActive: true,
+		},
+	];
 
 	public created() {
 		this.isLoading = true;
@@ -82,6 +119,65 @@ export default class Home extends Vue {
 				this.progress = 0;
 				this.progressMax = 0;
 			});
+	}
+
+	public setDisplay(displayType: DisplayType): void {
+		this.displays.forEach((display) => (display.isActive = display.displayType === displayType));
+	}
+
+	public isViewActive(displayType: DisplayType): boolean {
+		const display = this.displays.find((display) => display.displayType === displayType);
+		if (!display) {
+			throw new Error(`Un-handled displayType: ${displayType}`);
+		}
+		return display.isActive;
+	}
+
+	public getTableFields(): ReadonlyArray<any> {
+		return [
+			{
+				key: 'artist',
+				label: 'Artist',
+				sortable: true,
+				// sortDirection: 'asc',
+			},
+			{
+				key: 'name',
+				label: 'Name',
+				sortable: true,
+			},
+			{
+				key: 'releaseDate',
+				label: 'Release Date',
+				sortable: true,
+				formatter: (value: Date) => this.formatReleaseDate(value),
+			},
+			{
+				key: 'images',
+				label: 'Cover',
+				sortable: false,
+			},
+		];
+	}
+
+	public getTableItems(): ReadonlyArray<{readonly [index: string]: any}> {
+		return this.albums
+			.filter((album) => {
+				if (this.artistFilter === '') {
+					return true;
+				}
+				return album.artist.toLowerCase().includes(this.artistFilter.toLowerCase());
+			})
+			.filter((album) => {
+				if (this.yearFilter === '') {
+					return true;
+				}
+				return album.releaseDate.getFullYear().toString().includes(this.yearFilter.toLowerCase());
+			});
+	}
+
+	public formatReleaseDate(date: Date): string {
+		return date.toDateString();
 	}
 
 	private async * getAllFollowedArtists(): AsyncIterableIterator<[number, ReadonlyArray<SpotifyArtist>]> {
@@ -122,7 +218,7 @@ export default class Home extends Vue {
 		return {
 			name: album.name,
 			artist: album.artists[0].name,
-			image: album.images[1].url,
+			images: [album.images[0].url, album.images[1].url, album.images[2].url],
 			releaseDate,
 		};
 	}

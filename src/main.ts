@@ -9,7 +9,7 @@ import BootstrapVue from 'bootstrap-vue';
 import './styles/import.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faTh, faList } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
 
@@ -24,7 +24,7 @@ Vue.use(BootstrapVue);
 
 // https://github.com/FortAwesome/vue-fontawesome
 // https://fontawesome.com/icons?d=gallery
-library.add(faSpinner);
+library.add(faSpinner, faTh, faList);
 library.add(faGithub);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('font-awesome-layers', FontAwesomeLayers);
