@@ -70,7 +70,7 @@ interface Album {
 	readonly releaseDate: Date;
 }
 
-const batchSize = 8;
+const batchSize = 3;
 
 @Component({})
 export default class Home extends Vue {
@@ -139,7 +139,7 @@ export default class Home extends Vue {
 				key: 'artist',
 				label: 'Artist',
 				sortable: true,
-				// sortDirection: 'asc',
+				// sortDirection: 'asc', // TODO: https://bootstrap-vue.js.org/docs/components/table/
 			},
 			{
 				key: 'name',
@@ -177,7 +177,7 @@ export default class Home extends Vue {
 	}
 
 	public formatReleaseDate(date: Date): string {
-		return date.toDateString();
+		return date.toLocaleDateString();
 	}
 
 	private async * getAllFollowedArtists(): AsyncIterableIterator<[number, ReadonlyArray<SpotifyArtist>]> {
