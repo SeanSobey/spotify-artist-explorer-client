@@ -6,7 +6,7 @@ See the app running at https://seansobey.github.io/spotify-artist-explorer-clien
 
 This app allows you to see the latest album released from your followed artists in Spotify.
 
-![Screenshot](\.github\images\Screenshot.PNG "Screenshot")
+![Screenshot](/.github/images/Screenshot.PNG "Screenshot")
 
 ## Project setup
 
