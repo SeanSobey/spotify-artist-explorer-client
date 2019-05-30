@@ -2,7 +2,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 // https://cli.vuejs.org/config
 module.exports = {
-	publicPath: isProd ? '/Spotify-Artist-Explorer/' : '/',
+	publicPath: isProd ? '/spotify-artist-explorer-client/' : '/',
 	devServer: {
 		clientLogLevel: 'silent', // ValidationError: webpack Dev Server Invalid Options :(
 	},

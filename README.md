@@ -2,6 +2,8 @@
 
 NodeJS server for the spotify artist explorer app, see the [server app](https://github.com/SeanSobey/spotify-artist-explorer-server/).
 
+See the app running at https://seansobey.github.io/spotify-artist-explorer-client/.
+
 ## Project setup
 
 ### Install node modules
