@@ -184,8 +184,7 @@ export default class Home extends Vue {
 		let after;
 		let next = true;
 		while (next) {
-			const promise = this.spotify.getFollowedArtists({ type: 'artist', limit: 50, after });
-			const data = await promise;
+			const data: any = await this.spotify.getFollowedArtists({ type: 'artist', limit: 50, after });
 			next = !!data.body.artists.next;
 			after = data.body.artists.items[data.body.artists.items.length - 1].id;
 			yield [data.body.artists.total, data.body.artists.items];

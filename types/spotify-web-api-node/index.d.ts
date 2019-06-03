@@ -1,6 +1,6 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, no-dupe-class-members */
 
-export interface Credentials {
+export declare interface Credentials {
 	readonly accessToken: string;
 	readonly refreshToken: string;
 	readonly redirectUri: string;
@@ -8,16 +8,16 @@ export interface Credentials {
 	readonly clientSecret: string;
 }
 
-export type Callback<T> = (data: T) => void;
+export declare type Callback<T> = (data: T) => void;
 
-export interface Data<T> {
+export declare interface Data<T> {
 	readonly body: T;
 	readonly headers: { readonly [index: string]: string };
 	readonly statusCode: number;
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#paging-object
-export interface Pager<T> {
+export declare interface Pager<T> {
 	/**
 	 * A link to the Web API endpoint returning the full result of the request.
 	 */
@@ -49,7 +49,7 @@ export interface Pager<T> {
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#cursor-based-paging-object
-export interface CursorPager<T> {
+export declare interface CursorPager<T> {
 	/**
 	 * A link to the Web API endpoint returning the full result of the request.
 	 */
@@ -77,17 +77,17 @@ export interface CursorPager<T> {
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#cursor-object
-export interface Cursor {
+export declare interface Cursor {
 	/**
 	 * The cursor to use as key to find the next page of items.
 	 */
 	readonly after: string;
 }
 
-export type ExternalUrl = { readonly [key: string]: string };
+export declare type ExternalUrl = { readonly [key: string]: string };
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#artist-object-full
-export interface Artist {
+export declare interface Artist {
 	/**
 	 * Known external URLs for this artist.
 	 */
@@ -115,7 +115,7 @@ export interface Artist {
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#album-object-simplified
-export interface Album {
+export declare interface Album {
 	/**
 	 * The field is present when getting an artist’s albums. Possible values are “album”, “single”, “compilation”, “appears_on”. Compare to album_type this field represents relationship between the artist and the album.
 	 */
@@ -175,7 +175,7 @@ export interface Album {
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/object-model/#image-object
-export interface Image {
+export declare interface Image {
 	/**
 	 * The image height in pixels. If unknown: null or not returned.
 	 */
@@ -191,7 +191,7 @@ export interface Image {
 }
 
 // https://developer.spotify.com/documentation/web-api/reference/artists/get-artists-albums/
-export interface ArtistAlbumsOptions {
+export declare interface ArtistAlbumsOptions {
 	/**
 	 * A comma-separated list of keywords that will be used to filter the response. If not supplied, all album types will be returned. Valid values are:
 	 * - album
@@ -217,7 +217,7 @@ export interface ArtistAlbumsOptions {
 	readonly offset?: number;
 }
 
-export interface FollowedArtistsOptions {
+export declare interface FollowedArtistsOptions {
 	/**
 	 * The ID type: currently only artist is supported.
 	 */
@@ -232,7 +232,7 @@ export interface FollowedArtistsOptions {
 	readonly after?: string;
 }
 
-export interface Spotify {
+export declare class Spotify {
 	new(): Spotify;
 	setCredentials(credentials: Credentials): void;
 	setAccessToken(accessToken: string): void;
@@ -266,7 +266,7 @@ export interface Spotify {
 	// getAlbumTracks(albumId, options, callback): void;
 	// getArtist(artistId, callback): void;
 	getArtistAlbums(artistId: string, options?: ArtistAlbumsOptions): Promise<Data<Pager<Album>>>;
-	// getArtistAlbums(artistId: string, options?: ArtistAlbumsOptions, callback?: Callback<Data<Pager<Album>>>): void;
+	getArtistAlbums(artistId: string, options: ArtistAlbumsOptions | undefined, callback: Callback<Data<Pager<Album>>>): void;
 	// getArtistRelatedArtists(artistId, callback): void;
 	// getArtists(artistIds, callback): void;
 	// getArtistTopTracks(artistId, country, callback): void;
@@ -279,8 +279,8 @@ export interface Spotify {
 	// getClientSecret(): string;
 	// getCredentials(): Credentials;
 	// getFeaturedPlaylists(options, callback): void;
-	getFollowedArtists(options?: FollowedArtistsOptions): Promise<Data<{ readonly artists: CursorPager<Artist> }>>;
-	// getFollowedArtists(options: FollowedArtistsOptions | undefined, callback: Callback<Data<{ readonly artists: CursorPager<Artist> }>>): void;
+	getFollowedArtists(options: FollowedArtistsOptions | undefined): Promise<Data<{ readonly artists: CursorPager<Artist> }>>;
+	getFollowedArtists(options: FollowedArtistsOptions | undefined, callback: Callback<Data<{ readonly artists: CursorPager<Artist> }>>): void;
 	// getMe(callback);
 	// getMyCurrentPlaybackState(options, callback): void;
 	// getMyCurrentPlayingTrack(options, callback): void;
