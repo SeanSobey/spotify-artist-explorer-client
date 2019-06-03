@@ -26,17 +26,26 @@ export default class Login extends Vue {
 	}
 
 	public loginOnClick(): void {
-		const width = 440;
-		const height = 660;
-		const left = (screen.width / 2) - (width / 2);
-		const top = (screen.height / 2) - (height / 2);
+		const windowWidth = 440;
+		const windowHeight = 660;
+
+		const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+		const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+		const screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+		const screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+		const systemZoom = windowWidth / window.screen.availWidth;
+
+		const width = windowWidth / systemZoom;
+		const height = windowHeight / systemZoom;
+		const top = (screenHeight - windowHeight) / 2 / systemZoom + dualScreenTop;
+		const left = (screenWidth - windowWidth) / 2 / systemZoom + dualScreenLeft;
 		const scopes = [
 			'user-follow-read',
 		];
 		this.authWindow = window.open(
 			this.spotify.createAuthorizeURL(scopes),
-			'Spotify',
-			`menubar=no,location=no,resizable=no,scrollbars=no,status=no,width=${width},height=${height},top=${top},left=${left}`
+			'_blank',
+			`menubar=no,location=no,resizable=no,scrollbars=no,status=no,titlebar=no,width=${width},height=${height},top=${top},left=${left}`
 		);
 	}
 
@@ -52,7 +61,7 @@ export default class Login extends Vue {
 		const code = event.data;
 		const url = new URL(authServer);
 		url.searchParams.append('code', code);
-		fetch(url.href, { method: 'POST' })
+		fetch(url.href, { method: 'GET' })
 			.then((response) => response.json())
 			.then((data) => {
 				const authentication: Authentication = {
