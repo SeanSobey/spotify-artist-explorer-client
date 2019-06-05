@@ -56,7 +56,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { BvTableField } from 'bootstrap-vue';
-import { Artist as SpotifyArtist, Album as SpotifyAlbum } from '../../types/spotify-web-api-node';
+import { Artist as SpotifyArtist, Album as SpotifyAlbum } from '@/../types/spotify-web-api-node';
+import { retryAfter } from '@/util';
 
 enum DisplayType {
 	Grid = 'grid',
@@ -69,8 +70,6 @@ interface Album {
 	readonly images: [string, string, string];
 	readonly releaseDate: Date;
 }
-
-const batchSize = 3;
 
 @Component({})
 export default class Home extends Vue {
@@ -192,23 +191,21 @@ export default class Home extends Vue {
 	}
 
 	private async * batchGetArtistAlbums(artists: ReadonlyArray<SpotifyArtist>): AsyncIterableIterator<[SpotifyArtist, Album]> {
-		const remaining = [...artists];
-		while (remaining.length > 0) {
-			const batch = remaining.splice(0, batchSize);
-			const promises = batch.map((artist) =>
-				this.spotify.getArtistAlbums(artist.id, { limit: 1, include_groups: 'album' })
-					.then((albumData) => ({ artist, albumData }))
-			);
-			const promisesData = await Promise.all(promises);
-			for (const { artist, albumData } of promisesData) {
-				if (albumData.body.items.length === 0) {
-					continue;
-				}
-				const albums = albumData.body.items.map((album) => this.createAlbum(album));
-				albums.sort((a, b) => a.releaseDate.valueOf() - b.releaseDate.valueOf());
-				const album = albums[0];
-				yield [artist, album];
+		const promises = artists.map((artist) =>
+			retryAfter(
+				() => this.spotify.getArtistAlbums(artist.id, { limit: 1, include_groups: 'album' }),
+				(error) => error.statusCode === 429
+			).then((albumData) => ({ artist, albumData }))
+		);
+		const promisesData = await Promise.all(promises);
+		for (const { artist, albumData } of promisesData) {
+			if (albumData.body.items.length === 0) {
+				continue;
 			}
+			const albums = albumData.body.items.map((album) => this.createAlbum(album));
+			albums.sort((a, b) => a.releaseDate.valueOf() - b.releaseDate.valueOf());
+			const album = albums[0];
+			yield [artist, album];
 		}
 	}
 
