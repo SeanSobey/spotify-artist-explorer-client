@@ -44,7 +44,14 @@
 			</b-col>
 		</b-row>
 		<b-row v-if="isViewActive('list')">
-			<b-table striped hover :items="getTableItems()" :fields="getTableFields()">
+			<b-table
+				striped
+				hover
+				:items="getTableItems()"
+				:fields="getTableFields()"
+				:sort-by="'artist'"
+				:sort-direction="'asc'"
+			>
 				<template slot="images" slot-scope="data">
 					<b-img thumbnail fluid :src="data.item.images[2]" :alt="data.item.name"></b-img>
 				</template>
@@ -106,7 +113,6 @@ export default class Home extends Vue {
 				for await (const [artist, albums] of this.batchGetArtistAlbums(artists)) {
 					this.progress++;
 					this.albums.push(albums);
-					this.albums.sort((a, b) => a.artist.localeCompare(b.artist));
 				}
 			}
 		})()
@@ -138,7 +144,6 @@ export default class Home extends Vue {
 				key: 'artist',
 				label: 'Artist',
 				sortable: true,
-				// sortDirection: 'asc', // TODO: https://bootstrap-vue.js.org/docs/components/table/
 			},
 			{
 				key: 'name',
