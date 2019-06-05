@@ -12,7 +12,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Authentication } from '@/store';
 import { RouteNames } from '@/router';
-import { spotify, authServer } from '@/constants';
 
 @Component({})
 export default class Login extends Vue {
@@ -21,8 +20,8 @@ export default class Login extends Vue {
 	constructor() {
 		super();
 		window.addEventListener('message', this.messageEventListener.bind(this), false);
-		this.spotify.setRedirectURI(spotify.redirectURI);
-		this.spotify.setClientId(spotify.clientId);
+		this.spotify.setRedirectURI(process.env.VUE_APP_SPOTIFY_REDIRECT_URI);
+		this.spotify.setClientId(process.env.VUE_APP_SPOTIFY_CLIENT_ID);
 	}
 
 	public loginOnClick(): void {
@@ -79,7 +78,7 @@ export default class Login extends Vue {
 		this.authWindow.close();
 		this.authWindow = null;
 		const code = event.data;
-		const url = new URL(authServer);
+		const url = new URL(process.env.VUE_APP_AUTH_SERVER);
 		url.searchParams.append('code', code);
 		fetch(url.href, { method: 'GET' })
 			.then((response) => response.json())
@@ -95,10 +94,10 @@ export default class Login extends Vue {
 				this.spotify.setRefreshToken(authentication.refreshToken);
 				this.$store.commit('authenticate', authentication);
 				this.$router.push(RouteNames.home);
-			})
-			.catch((error) => {
-				console.error('fetch failed', error);
 			});
+		// .catch((error) => {
+		// 	console.error('fetch failed', error);
+		// });
 	}
 }
 </script>
