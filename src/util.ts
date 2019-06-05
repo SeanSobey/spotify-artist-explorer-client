@@ -5,7 +5,7 @@
  * @param retries Max number of retries
  * @param retryInterval Max retry interval
  */
-export async function retryAfter<T>(promiseFn: () => Promise<T>, retryFn: (error: any) => boolean, retries: number = 5, retryInterval: number = 1000): Promise<T> {
+export async function retryAfter<T>(promiseFn: () => Promise<T>, retryFn: (error: any) => boolean, retries: number = 5, retryInterval: number = 2000): Promise<T> {
 	try {
 		return await promiseFn();
 	} catch (error) {
