@@ -28,24 +28,44 @@ export default class Login extends Vue {
 	public loginOnClick(): void {
 		const windowWidth = 440;
 		const windowHeight = 660;
-
-		const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
-		const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
-		const screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-		const screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-		const systemZoom = windowWidth / window.screen.availWidth;
-
-		const width = windowWidth / systemZoom;
-		const height = windowHeight / systemZoom;
-		const top = (screenHeight - windowHeight) / 2 / systemZoom + dualScreenTop;
-		const left = (screenWidth - windowWidth) / 2 / systemZoom + dualScreenLeft;
 		const scopes = [
 			'user-follow-read',
 		];
-		this.authWindow = window.open(
-			this.spotify.createAuthorizeURL(scopes),
-			'_blank',
-			`menubar=no,location=no,resizable=no,scrollbars=no,status=no,titlebar=no,width=${width},height=${height},top=${top},left=${left}`
+		const features = [
+			'menubar=no',
+			'location=no',
+			'resizable=no',
+			'resizable=no',
+			'scrollbars=no',
+			'status=no',
+			'titlebar=no',
+		];
+		const popupWindow = this.popupWindowCenter(this.spotify.createAuthorizeURL(scopes), '_blank', features, windowWidth, windowHeight);
+		if (popupWindow) {
+			popupWindow.document.title = 'Spotify';
+			this.authWindow = popupWindow;
+		}
+	}
+
+	private popupWindowCenter(url: string, target: string, features: ReadonlyArray<string>, windowWidth: number, windowHeight: number): Window | null {
+		const dualScreenLeft = window.screenLeft || window.screenX;
+		const dualScreenTop = window.screenTop || window.screenY;
+
+		const screenWidth = window.innerWidth || window.document.documentElement.clientWidth || document.body.clientWidth;// window.screen.width;
+		const screenHeight = window.innerHeight || window.document.documentElement.clientHeight || document.body.clientHeight;// window.screen.height;
+
+		// const systemZoom = screenWidth / window.screen.availWidth;
+		// const left = (screenWidth - windowWidth) / 2 / systemZoom + dualScreenLeft;
+		// const top = (screenHeight - windowHeight) / 2 / systemZoom + dualScreenTop;
+		// const width = windowWidth / systemZoom;
+		// const height = windowHeight / systemZoom;
+		const left = ((screenWidth - windowWidth) / 2) + dualScreenLeft;
+		const top = ((screenHeight - windowHeight) / 2) + dualScreenTop;
+		const width = windowWidth;
+		const height = windowHeight;
+
+		return window.open(url, target,
+			[...features, `width=${width}`, `height=${height}`, `top=${top}`, `left=${left}`].join(', ')
 		);
 	}
 
