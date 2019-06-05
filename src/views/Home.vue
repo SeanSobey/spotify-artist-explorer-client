@@ -33,13 +33,18 @@
 		</b-row>
 		<b-row v-if="isViewActive('grid')">
 			<b-col
-				v-for="(album, index) in albums"
+				v-for="(item, index) in getGridItems()"
 				:key="index"
 				align-content="center"
 				class="col-sm-5 col-md-4 col-lg-3 col-xl-2"
 			>
-				<b-card :img-src="album.images[1]" :img-alt="album.name" img-top class="my-2">
-					<b-card-text>{{ album.artist }} - {{ formatReleaseDate(album.releaseDate) }} - {{ album.name }}</b-card-text>
+				<b-card :img-src="item.image" :img-alt="item.name" img-top class="my-2">
+					<b-card-text class="text-center">
+						<b class="mb-0">{{ formatReleaseDate(item.releaseDate) }}</b>
+						<p class="mb-0">{{ item.artist }}</p>
+						<p class="mb-0">{{ item.name }}</p>
+						<!-- {{ item.artist }} - {{ formatReleaseDate(item.releaseDate) }} - {{ item.name }} -->
+					</b-card-text>
 				</b-card>
 			</b-col>
 		</b-row>
@@ -53,7 +58,7 @@
 				:sort-direction="'asc'"
 			>
 				<template slot="images" slot-scope="data">
-					<b-img thumbnail fluid :src="data.item.images[2]" :alt="data.item.name"></b-img>
+					<b-img thumbnail fluid :src="data.item.image" :alt="data.item.name"></b-img>
 				</template>
 			</b-table>
 		</b-row>
@@ -138,6 +143,21 @@ export default class Home extends Vue {
 		return display.isActive;
 	}
 
+	public getGridItems(): ReadonlyArray<any> {
+		const items = this.albums
+			.map((album) => ({
+				name: album.name,
+				artist: album.artist,
+				image: album.images[1],
+				releaseDate: album.releaseDate,
+			}));
+		items.sort((a, b) => {
+			// TODO: dropdown or something to choose
+			return a.artist.localeCompare(b.artist);
+		});
+		return items;
+	}
+
 	public getTableFields(): ReadonlyArray<any> {
 		return [
 			{
@@ -177,7 +197,13 @@ export default class Home extends Vue {
 					return true;
 				}
 				return album.releaseDate.getFullYear().toString().includes(this.yearFilter.toLowerCase());
-			});
+			})
+			.map((album) => ({
+				name: album.name,
+				artist: album.artist,
+				image: album.images[2],
+				releaseDate: album.releaseDate,
+			}));
 	}
 
 	public formatReleaseDate(date: Date): string {
