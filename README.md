@@ -6,6 +6,8 @@ See the app running at https://seansobey.github.io/spotify-artist-explorer-clien
 
 This app allows you to see the latest album released from your followed artists in Spotify.
 
+See: http://app.swarm.fm
+
 ![Screenshot](/.github/images/Screenshot.PNG "Screenshot")
 
 ## Project setup
@@ -64,3 +66,11 @@ npm run test:unit
 ## Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## TODO
+
+### Features
+
+- [ ] Multiple albums per artist
+- [ ] Formatting like this: http://app.swarm.fm
+- [ ] 
