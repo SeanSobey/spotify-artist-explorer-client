@@ -9,6 +9,8 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
