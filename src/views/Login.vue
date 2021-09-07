@@ -1,8 +1,9 @@
 <template>
 	<b-container fluid>
 		<b-row class="justify-content-center mt-5">
-			<b-button variant="primary" v-on:click="loginOnClick()">
+			<b-button variant="primary" v-on:click="loginOnClick()" :disabled='isLoading'>
 				<img src="../assets/Spotify_logo_without_text_white.svg" width="16" height="16" class="mr-1 mb-1" />Login to Spotify
+				<font-awesome-icon v-if="isLoading" icon="spinner" class="spin mr-2"/>
 			</b-button>
 		</b-row>
 	</b-container>
@@ -15,6 +16,8 @@ import { RouteNames } from '@/router';
 
 @Component({})
 export default class Login extends Vue {
+	public isLoading: boolean = false;
+
 	private authWindow: Window | null = null;
 
 	constructor() {
@@ -80,6 +83,7 @@ export default class Login extends Vue {
 		const code = event.data;
 		const url = new URL(process.env.VUE_APP_AUTH_SERVER);
 		url.searchParams.append('code', code);
+		this.isLoading = true;
 		fetch(url.href, { method: 'GET' })
 			.then((response) => response.json())
 			.then((data) => {
@@ -94,10 +98,13 @@ export default class Login extends Vue {
 				this.spotify.setRefreshToken(authentication.refreshToken);
 				this.$store.commit('authenticate', authentication);
 				this.$router.push(RouteNames.home);
+			})
+			.catch((error) => {
+				alert(error);
+			})
+			.finally(() => {
+				this.isLoading = false;
 			});
-		// .catch((error) => {
-		// 	console.error('fetch failed', error);
-		// });
 	}
 }
 </script>
